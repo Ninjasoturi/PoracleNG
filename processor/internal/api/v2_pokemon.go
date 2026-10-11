@@ -69,8 +69,9 @@ type v2PokemonRule struct {
 	PVPRankingEvolution *int `json:"pvp_ranking_evolution,omitempty" minimum:"0" maximum:"3" nullable:"true" doc:"Temp-evolution (mega) PVP discriminator selecting which evolution's PVP rank this rule alerts on: 0 = base form, 1 = Mega, 2 = Mega X, 3 = Mega Y. Omit for base form (stored as 0). Returned as null when at its wildcard (0)."`
 
 	// Common fields.
-	Distance *int    `json:"distance,omitempty" minimum:"0" maximum:"40000000" nullable:"true" doc:"Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard."`
+	Distance *int    `json:"distance,omitempty" minimum:"0" maximum:"40000000" nullable:"true" doc:"Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard."`
 	Template *string `json:"template,omitempty" nullable:"true" doc:"DTS template name. Omit (or empty) to use the server's configured default template (stored as \"\"). Returned as null when at its wildcard."`
+	Ping     *string `json:"ping,omitempty" nullable:"true" maxLength:"255" doc:"Text appended to the alert, typically Discord role/user mentions. Stored verbatim — not restricted to mention tokens as the bot is, so @everyone/@here in a channel rule will ping. Omit for none. Returned as null when empty."`
 	Clean    *bool   `json:"clean,omitempty" nullable:"true" doc:"Auto-delete the alert on expiry (clean bitmask bit 1). Omit to disable (default false). Returned as null when false."`
 	Edit     *bool   `json:"edit,omitempty" nullable:"true" doc:"Edit the original alert in place when the same encounter is re-sent (IV reveal, weather boost, species/form change), while the alert is within the server's pokemon_edit_window_mins (default 5); later updates arrive as threaded replies. The operator can disable pokemon edit ([tracking] pokemon_edit). Clean bitmask bit 2. Omit to disable (default false). Returned as null when false."`
 	Summary  *bool   `json:"summary,omitempty" nullable:"true" doc:"Route into the summary digest (clean bitmask bit 4). Omit to disable (default false). Returned as null when false."`
@@ -85,6 +86,22 @@ func valueOr[T any](p *T, def T) T {
 		return def
 	}
 	return *p
+}
+
+// earthCircumference (metres) caps distance when the operator sets no
+// [tracking] max_distance — no radius can usefully exceed it.
+const earthCircumference = 40000000
+
+// clampV2Distance caps a rule's radius at [tracking] max_distance (or the
+// earth's circumference when that is 0), as the bot's enforceDistance does.
+// Clamped rather than rejected so a stored rule above a since-lowered limit
+// still round-trips through GET → POST/PUT instead of failing the whole body.
+func clampV2Distance(deps *TrackingDeps, distance int) int {
+	limit := earthCircumference
+	if deps != nil && deps.Config != nil && deps.Config.Tracking.MaxDistance > 0 {
+		limit = deps.Config.Tracking.MaxDistance
+	}
+	return min(distance, limit)
 }
 
 // packClean collapses the clean/edit/summary booleans into the stored bitmask
@@ -105,14 +122,10 @@ func packClean(clean, edit, summary bool) int {
 
 // translateV2Pokemon converts a strict v2 pokemon rule into the stored
 // MonsterTrackingAPI, applying documented defaults, gender enum→int, the clean
-// bitmask, profile, and validated/normalized override fields. ping is always
-// stored "" (server-managed). Returns an huma error on override-field violation.
+// bitmask, profile, and validated/normalized override fields.
+// Returns an huma error on override-field violation.
 func translateV2Pokemon(deps *TrackingDeps, humanID string, profileNo int, oc overrideContext, req *v2PokemonRule) (db.MonsterTrackingAPI, error) {
-	distance := valueOr(req.Distance, 0)
-	const maxDistance = 40000000 // Earth circumference (metres)
-	if distance > maxDistance {
-		distance = maxDistance
-	}
+	distance := clampV2Distance(deps, valueOr(req.Distance, 0))
 
 	overrideLabel := valueOr(req.OverrideLocationLabel, "")
 	if msg, code := validateOverrideFields(deps, oc, humanID, overrideLabel, req.OverrideAreas, distance); msg != "" {
@@ -124,7 +137,7 @@ func translateV2Pokemon(deps *TrackingDeps, humanID string, profileNo int, oc ov
 	row := db.MonsterTrackingAPI{
 		ID:                    humanID,
 		ProfileNo:             profileNo,
-		Ping:                  "", // server-managed
+		Ping:                  valueOr(req.Ping, ""),
 		Template:              template,
 		Distance:              distance,
 		PokemonID:             valueOr(req.PokemonID, 0),
@@ -203,6 +216,7 @@ func pokemonRowToRule(row *db.MonsterTrackingAPI) v2PokemonRule {
 		PVPRankingEvolution:   ptrUnless(row.PVPRankingEvolution, 0),
 		Distance:              ptrUnless(row.Distance, 0),
 		Template:              ptrUnless(row.Template, ""),
+		Ping:                  ptrUnless(row.Ping, ""),
 		Clean:                 ptrUnless(db.IsClean(row.Clean), false),
 		Edit:                  ptrUnless(db.IsEdit(row.Clean), false),
 		Summary:               ptrUnless(db.IsSummary(row.Clean), false),
@@ -243,14 +257,33 @@ func RegisterV2TrackingPokemon(api huma.API, deps *TrackingDeps) {
 		Store: func(d *TrackingDeps) store.TrackingStore[db.MonsterTrackingAPI] {
 			return d.Tracking.Monsters
 		},
-		Translate: translateV2Pokemon,
-		ToRule:    pokemonRowToRule,
-		GetUID:    store.MonsterGetUID,
-		SetUID:    store.MonsterSetUID,
+		Translate:    translateV2Pokemon,
+		Canonicalize: canonicalizePokemonRow,
+		ToRule:       pokemonRowToRule,
+		GetUID:       store.MonsterGetUID,
+		SetUID:       store.MonsterSetUID,
 		RowText: func(d *TrackingDeps, tr *i18n.Translator, row *db.MonsterTrackingAPI) string {
 			return d.RowText.MonsterRowText(tr, toMonsterTracking(row))
 		},
 	})
+}
+
+// canonicalizePokemonRow maps the alias wildcards that pokemonRowToRule
+// projects to null (ptrUnlessAny) onto the value translateV2Pokemon stores
+// for null, so diffing treats them as the same rule.
+func canonicalizePokemonRow(row *db.MonsterTrackingAPI) {
+	if row.Rarity == 0 {
+		row.Rarity = -1
+	}
+	if row.Size == 0 {
+		row.Size = -1
+	}
+	if row.PVPRankingBest == 0 {
+		row.PVPRankingBest = 1
+	}
+	if row.PVPRankingWorst == 0 {
+		row.PVPRankingWorst = 4096
+	}
 }
 
 // ptrUnlessAny is ptrUnless for fields with more than one "no filter" value.
