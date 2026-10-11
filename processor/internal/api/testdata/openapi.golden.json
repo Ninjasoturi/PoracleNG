@@ -3019,7 +3019,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3154,7 +3154,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3289,7 +3289,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3438,7 +3438,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3533,7 +3533,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3628,7 +3628,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3738,7 +3738,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3858,7 +3858,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -3978,7 +3978,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4108,7 +4108,7 @@
                   "type": "integer"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4202,7 +4202,7 @@
                   "type": "integer"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4296,7 +4296,7 @@
                   "type": "integer"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4399,7 +4399,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4523,7 +4523,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4647,7 +4647,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4778,7 +4778,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4871,7 +4871,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -4964,7 +4964,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5068,7 +5068,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5214,7 +5214,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5360,7 +5360,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5517,7 +5517,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5631,7 +5631,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5745,7 +5745,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -5899,7 +5899,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -6276,7 +6276,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -6653,7 +6653,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7020,7 +7020,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7144,7 +7144,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7268,7 +7268,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7404,7 +7404,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7586,7 +7586,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7768,7 +7768,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -7972,7 +7972,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8119,7 +8119,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8227,7 +8227,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8355,7 +8355,7 @@
                   "type": "integer"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8456,7 +8456,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8585,7 +8585,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8687,7 +8687,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8842,7 +8842,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -8994,7 +8994,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -9359,7 +9359,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -9493,7 +9493,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -9686,7 +9686,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -9808,7 +9808,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -9889,7 +9889,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -10082,7 +10082,7 @@
             "type": "integer"
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -10158,7 +10158,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -10281,7 +10281,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -10428,7 +10428,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -10536,7 +10536,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -10664,7 +10664,7 @@
                   "type": "integer"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -10765,7 +10765,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -10894,7 +10894,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -10996,7 +10996,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -11151,7 +11151,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -11303,7 +11303,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -11668,7 +11668,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -11802,7 +11802,7 @@
                   "type": "string"
                 },
                 "distance": {
-                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+                  "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
                   "format": "int64",
                   "maximum": 40000000,
                   "minimum": 0,
@@ -12045,7 +12045,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -12122,7 +12122,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -12311,7 +12311,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -12462,7 +12462,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -12876,7 +12876,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -12985,7 +12985,7 @@
             ]
           },
           "distance": {
-            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard.",
+            "description": "Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard.",
             "format": "int64",
             "maximum": 40000000,
             "minimum": 0,
@@ -16751,6 +16751,65 @@
       }
     },
     "/v2/humans/{id}/location": {
+      "delete": {
+        "description": "Resets the location to 0,0 (unset), the same targeting as POST location. Not subject to the area-restriction check. Rules with a distance > 0 stay as they are and will not match until a location is set again; reset their distance if area matching is wanted. Triggers a state reload. 404 if the human does not exist.",
+        "operationId": "v2-clear-human-location",
+        "parameters": [
+          {
+            "description": "Human id (the owning user)",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "description": "Human id (the owning user)",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Profile number; defaults to the human's active profile",
+            "explode": false,
+            "in": "query",
+            "name": "profile",
+            "schema": {
+              "default": -1,
+              "description": "Profile number; defaults to the human's active profile",
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusOKOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "poracleSecret": []
+          }
+        ],
+        "summary": "Clear a human's location",
+        "tags": [
+          "v2-humans"
+        ]
+      },
       "post": {
         "description": "lat/lon are taken from the BODY (v1 took them from the path). When area_security is enabled and the human has an area restriction, the location must fall inside an allowed fence (403 otherwise). Triggers a state reload. 404 if the human does not exist.",
         "operationId": "v2-set-human-location",

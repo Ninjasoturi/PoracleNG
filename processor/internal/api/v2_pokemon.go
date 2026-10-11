@@ -69,7 +69,7 @@ type v2PokemonRule struct {
 	PVPRankingEvolution *int `json:"pvp_ranking_evolution,omitempty" minimum:"0" maximum:"3" nullable:"true" doc:"Temp-evolution (mega) PVP discriminator selecting which evolution's PVP rank this rule alerts on: 0 = base form, 1 = Mega, 2 = Mega X, 3 = Mega Y. Omit for base form (stored as 0). Returned as null when at its wildcard (0)."`
 
 	// Common fields.
-	Distance *int    `json:"distance,omitempty" minimum:"0" maximum:"40000000" nullable:"true" doc:"Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Returned as null when at its wildcard."`
+	Distance *int    `json:"distance,omitempty" minimum:"0" maximum:"40000000" nullable:"true" doc:"Radius in metres around the anchor location. Omit (or 0) to match by the profile's geofence areas instead of a radius — 0 means area-based, NOT zero metres (stored as 0). Values above the server's [tracking] max_distance are clamped to it. Returned as null when at its wildcard."`
 	Template *string `json:"template,omitempty" nullable:"true" doc:"DTS template name. Omit (or empty) to use the server's configured default template (stored as \"\"). Returned as null when at its wildcard."`
 	Ping     *string `json:"ping,omitempty" nullable:"true" maxLength:"255" doc:"Text appended to the alert, typically Discord role/user mentions. Stored verbatim — not restricted to mention tokens as the bot is, so @everyone/@here in a channel rule will ping. Omit for none. Returned as null when empty."`
 	Clean    *bool   `json:"clean,omitempty" nullable:"true" doc:"Auto-delete the alert on expiry (clean bitmask bit 1). Omit to disable (default false). Returned as null when false."`
@@ -86,6 +86,22 @@ func valueOr[T any](p *T, def T) T {
 		return def
 	}
 	return *p
+}
+
+// earthCircumference (metres) caps distance when the operator sets no
+// [tracking] max_distance — no radius can usefully exceed it.
+const earthCircumference = 40000000
+
+// clampV2Distance caps a rule's radius at [tracking] max_distance (or the
+// earth's circumference when that is 0), as the bot's enforceDistance does.
+// Clamped rather than rejected so a stored rule above a since-lowered limit
+// still round-trips through GET → POST/PUT instead of failing the whole body.
+func clampV2Distance(deps *TrackingDeps, distance int) int {
+	limit := earthCircumference
+	if deps != nil && deps.Config != nil && deps.Config.Tracking.MaxDistance > 0 {
+		limit = deps.Config.Tracking.MaxDistance
+	}
+	return min(distance, limit)
 }
 
 // packClean collapses the clean/edit/summary booleans into the stored bitmask
@@ -109,11 +125,7 @@ func packClean(clean, edit, summary bool) int {
 // bitmask, profile, and validated/normalized override fields.
 // Returns an huma error on override-field violation.
 func translateV2Pokemon(deps *TrackingDeps, humanID string, profileNo int, oc overrideContext, req *v2PokemonRule) (db.MonsterTrackingAPI, error) {
-	distance := valueOr(req.Distance, 0)
-	const maxDistance = 40000000 // Earth circumference (metres)
-	if distance > maxDistance {
-		distance = maxDistance
-	}
+	distance := clampV2Distance(deps, valueOr(req.Distance, 0))
 
 	overrideLabel := valueOr(req.OverrideLocationLabel, "")
 	if msg, code := validateOverrideFields(deps, oc, humanID, overrideLabel, req.OverrideAreas, distance); msg != "" {
