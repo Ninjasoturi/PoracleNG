@@ -1884,6 +1884,16 @@
             "format": "int64",
             "type": "integer"
           },
+          "defaultEdit": {
+            "description": "Alert types ([tracking] default_edit) whose rules edit the original alert in place even without the edit flag. Always an array; empty when none.",
+            "items": {
+              "type": "string"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
           "defaultPvpCap": {
             "description": "Default user PVP level cap",
             "format": "int64",
@@ -1996,6 +2006,7 @@
           "availableLanguages",
           "channelNotesContainsCategory",
           "defaultDistance",
+          "defaultEdit",
           "defaultPvpCap",
           "defaultTemplateName",
           "disabledHooks",

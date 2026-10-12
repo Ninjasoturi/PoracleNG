@@ -597,6 +597,12 @@ pokemon_edit = true
 #   this many minutes old; after that, follow-ups arrive as threaded replies
 #   so they aren't lost further up a busy channel. 0 = no limit.
 pokemon_edit_window_mins = 5
+# default_edit - alert types that edit the original alert in place even when
+#   the rule doesn't set `edit` (as if every rule of that type had `edit`).
+#   Applies to existing and new rules while the type is listed; remove it to
+#   revert. Supported: pokemon, raid, egg, lure, incident.
+#   e.g. default_edit = ["pokemon", "raid", "egg"]
+default_edit = []
 
 # Quest summary — when on, quest tracking rules with the summary clean bit set
 # (clean & 4) defer matched quests into a per-user in-memory buffer instead of
