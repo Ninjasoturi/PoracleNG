@@ -186,3 +186,39 @@ func humanToTarget(h *store.Human) *Target {
 		HasArea:     hasArea,
 	}
 }
+
+// strictTargetCommands parse only the explicit `user:<id>` / `name:<name>`
+// override forms. Their other arguments are opaque values (player IDs,
+// labels) that may legitimately begin with "user" or "name".
+var strictTargetCommands = map[string]bool{"cmd.account": true}
+
+// BuildTargetFor is BuildTarget with per-command override parsing.
+func BuildTargetFor(ctx *CommandContext, cmdKey string, args []string) (*Target, []string, error) {
+	if !strictTargetCommands[cmdKey] {
+		return BuildTarget(ctx, args)
+	}
+	var overrides, rest []string
+	for _, a := range args {
+		if strings.HasPrefix(a, "user:") || strings.HasPrefix(a, "name:") {
+			overrides = append(overrides, a)
+		} else {
+			rest = append(rest, a)
+		}
+	}
+	target, _, err := BuildTarget(ctx, overrides)
+	return target, rest, err
+}
+
+// StripTargetTokens removes `user:<x>` / `name:<x>` override tokens from
+// verbatim args (matched case-insensitively, as the parser lowercases Args).
+func StripTargetTokens(verbatim []string) []string {
+	out := make([]string, 0, len(verbatim))
+	for _, v := range verbatim {
+		l := strings.ToLower(v)
+		if strings.HasPrefix(l, "user:") || strings.HasPrefix(l, "name:") {
+			continue
+		}
+		out = append(out, v)
+	}
+	return out
+}

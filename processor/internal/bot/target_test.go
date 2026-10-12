@@ -174,3 +174,25 @@ func TestBuildTarget_NonAdminInUnregisteredChannelRejected(t *testing.T) {
 		t.Errorf("error should mention unregistered; got %q", err.Error())
 	}
 }
+
+func TestBuildTargetStrictKeepsUserPrefixedArgs(t *testing.T) {
+	ctx := newTargetCtx(t, true, false)
+	_, rest, err := BuildTargetFor(ctx, "cmd.account", []string{"add", "username123", "namesake"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(rest) != 3 || rest[1] != "username123" || rest[2] != "namesake" {
+		t.Fatalf("strict target ate args: %q", rest)
+	}
+	// Non-account commands keep the legacy behaviour.
+	if _, rest, _ := BuildTargetFor(ctx, "cmd.track", []string{"pikachu"}); len(rest) != 1 {
+		t.Fatalf("track args = %q", rest)
+	}
+}
+
+func TestStripTargetTokens(t *testing.T) {
+	got := StripTargetTokens([]string{"add", "User:123", "Abc_Def", "NAME:hook", "username1"})
+	if len(got) != 3 || got[0] != "add" || got[1] != "Abc_Def" || got[2] != "username1" {
+		t.Fatalf("got %q", got)
+	}
+}
