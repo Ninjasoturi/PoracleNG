@@ -600,7 +600,7 @@ pokemon_edit_window_mins = 5
 # default_edit - alert types that edit the original alert in place even when
 #   the rule doesn't set `edit` (as if every rule of that type had `edit`).
 #   Applies to existing and new rules while the type is listed; remove it to
-#   revert. Supported: pokemon, raid, egg, lure, incident.
+#   revert. Supported (case-insensitive): pokemon, raid, egg, lure, incident.
 #   e.g. default_edit = ["pokemon", "raid", "egg"]
 default_edit = []
 

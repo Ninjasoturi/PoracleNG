@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -129,8 +130,13 @@ type TrackingConfig struct {
 var DefaultEditTypes = []string{"pokemon", "raid", "egg", "lure", "incident"}
 
 // DefaultEditFor reports whether alertType is listed in default_edit.
+// Entries match ignoring case and surrounding spaces.
 func (t TrackingConfig) DefaultEditFor(alertType string) bool {
-	return slices.Contains(t.DefaultEdit, alertType)
+	return slices.ContainsFunc(t.DefaultEdit, func(v string) bool { return sameEditType(v, alertType) })
+}
+
+func sameEditType(entry, alertType string) bool {
+	return strings.EqualFold(strings.TrimSpace(entry), alertType)
 }
 
 // UnsupportedDefaultEdit returns default_edit entries that are not in
@@ -138,7 +144,7 @@ func (t TrackingConfig) DefaultEditFor(alertType string) bool {
 func (t TrackingConfig) UnsupportedDefaultEdit() []string {
 	var bad []string
 	for _, v := range t.DefaultEdit {
-		if !slices.Contains(DefaultEditTypes, v) {
+		if !slices.ContainsFunc(DefaultEditTypes, func(alertType string) bool { return sameEditType(v, alertType) }) {
 			bad = append(bad, v)
 		}
 	}

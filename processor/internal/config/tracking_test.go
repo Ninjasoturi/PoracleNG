@@ -52,7 +52,7 @@ func TestTrackingDefaultEdit(t *testing.T) {
 		t.Error("default_edit should be empty by default")
 	}
 
-	cfg, err = loadFromReader(t, "[tracking]\ndefault_edit = [\"pokemon\", \"egg\", \"gym\"]\n")
+	cfg, err = loadFromReader(t, "[tracking]\ndefault_edit = [\"pokemon\", \" Egg \", \"gym\"]\n")
 	if err != nil {
 		t.Fatalf("load: %v", err)
 	}
