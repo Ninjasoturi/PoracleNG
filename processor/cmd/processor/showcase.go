@@ -127,6 +127,7 @@ func (ps *ProcessorService) ProcessShowcase(raw json.RawMessage) error {
 		matched = ps.filterBlocked(matched)
 		matched = ps.filterValidation("pokestop", raw, matchedAreas, matched)
 		matched = ps.filterMuted(matched, matchedAreas, mute.Event{PokestopID: sc.PokestopID})
+		applyDefaultEdit(matched, ps.cfg.Tracking, "incident")
 
 		if len(matched) == 0 {
 			l.Debugf("Showcase at %s [%.3f,%.3f] and 0 humans cared", sc.Name, sc.Latitude, sc.Longitude)

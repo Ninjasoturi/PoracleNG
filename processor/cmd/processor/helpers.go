@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/pokemon/poracleng/processor/internal/bot"
+	"github.com/pokemon/poracleng/processor/internal/config"
 	"github.com/pokemon/poracleng/processor/internal/delivery"
 	"github.com/pokemon/poracleng/processor/internal/gamedata"
 	"github.com/pokemon/poracleng/processor/internal/metrics"
@@ -165,6 +166,19 @@ func (ps *ProcessorService) filterBlocked(matched []webhook.MatchedUser) []webho
 		allowed = append(allowed, m)
 	}
 	return allowed
+}
+
+// applyDefaultEdit sets the edit bit on every matched user when alertType is
+// listed in [tracking] default_edit, so downstream edit-key, raid-partition
+// and delivery-tracking decisions treat those rules as edit rules. The stored
+// rule is untouched: removing the type from the list reverts the behaviour.
+func applyDefaultEdit(matched []webhook.MatchedUser, tracking config.TrackingConfig, alertType string) {
+	if !tracking.DefaultEditFor(alertType) {
+		return
+	}
+	for i := range matched {
+		matched[i].Clean |= 2
+	}
 }
 
 // filterMuted drops matched users whose in-memory mute state suppresses

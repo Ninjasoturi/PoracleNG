@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -104,6 +105,10 @@ type TrackingConfig struct {
 	// the update isn't lost up a busy channel. Default 5. 0 or negative = no
 	// limit.
 	PokemonEditWindowMins int `toml:"pokemon_edit_window_mins"`
+	// DefaultEdit lists alert types (see DefaultEditTypes) whose rules edit
+	// in place even when the rule's edit bit is not set. Applied at match
+	// time, so it covers existing rules and reverts cleanly when removed.
+	DefaultEdit []string `toml:"default_edit"`
 	// QuestSummaryEnabled toggles the per-user buffered quest summary
 	// pipeline (matcher routing, scheduler, render). Default true. When
 	// disabled the scheduler isn't started; the buffer is still loaded
@@ -118,6 +123,32 @@ type TrackingConfig struct {
 	// is zero/garbage/far-future from a malformed payload. Set 0 to
 	// disable the CreatedAt-axis sweep entirely. Default 24.
 	QuestSummaryBufferTTLHours int `toml:"quest_summary_buffer_ttl_hours"`
+}
+
+// DefaultEditTypes are the alert types whose alerts honour the edit bit and
+// so may appear in [tracking] default_edit.
+var DefaultEditTypes = []string{"pokemon", "raid", "egg", "lure", "incident"}
+
+// DefaultEditFor reports whether alertType is listed in default_edit.
+// Entries match ignoring case and surrounding spaces.
+func (t TrackingConfig) DefaultEditFor(alertType string) bool {
+	return slices.ContainsFunc(t.DefaultEdit, func(v string) bool { return sameEditType(v, alertType) })
+}
+
+func sameEditType(entry, alertType string) bool {
+	return strings.EqualFold(strings.TrimSpace(entry), alertType)
+}
+
+// UnsupportedDefaultEdit returns default_edit entries that are not in
+// DefaultEditTypes; they have no effect.
+func (t TrackingConfig) UnsupportedDefaultEdit() []string {
+	var bad []string
+	for _, v := range t.DefaultEdit {
+		if !slices.ContainsFunc(DefaultEditTypes, func(alertType string) bool { return sameEditType(v, alertType) }) {
+			bad = append(bad, v)
+		}
+	}
+	return bad
 }
 
 // PokemonEditMaxAge returns the pokemon edit window; 0 means no limit.

@@ -423,6 +423,7 @@ func main() {
 			Translations:        proc.enricher.Translations,
 			DefaultTemplateName: defaultTemplate,
 			Scanner:             proc.scanner,
+			DefaultEdit:         func(alertType string) bool { return cfg.Tracking.DefaultEditFor(alertType) },
 		},
 		Config:       cfg,
 		Translations: proc.enricher.Translations,
@@ -1426,6 +1427,10 @@ func NewProcessorService(cfg *config.Config, stateMgr *state.Manager, database *
 	if !geo.IsLocaleSupported(cfg.Locale.TimeFormat) {
 		log.Warnf("Unsupported locale.timeformat %q — Moment.js shortcuts (LTS, L, etc.) will fall back to en-gb. Supported locales: %v",
 			cfg.Locale.TimeFormat, geo.SupportedLocales())
+	}
+
+	if bad := cfg.Tracking.UnsupportedDefaultEdit(); len(bad) > 0 {
+		log.Warnf("[tracking] default_edit: ignoring %v — supported types are %v", bad, config.DefaultEditTypes)
 	}
 
 	// Idle expiry has to outlast the configured forecast cadence, or
