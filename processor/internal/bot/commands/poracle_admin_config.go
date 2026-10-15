@@ -176,13 +176,9 @@ func paConfigSearch(ctx *bot.CommandContext, args []string) []bot.Reply {
 	}
 
 	sort.Strings(matches)
-	var sb strings.Builder
-	sb.WriteString(tr.Tf("cmd.poracle_admin.config.search.header", term, len(matches)))
-	for _, m := range matches {
-		sb.WriteString("\n  ")
-		sb.WriteString(m)
-	}
-	return bot.SplitTextReply(sb.String())
+	replies := bot.SplitCodeBlockReply(strings.Join(matches, "\n"))
+	replies[0].Text = tr.Tf("cmd.poracle_admin.config.search.header", ctx.EscapeForCode(term), len(matches)) + "\n" + replies[0].Text
+	return replies
 }
 
 // paConfigKeys lists all top-level section names with their key counts.
@@ -226,7 +222,7 @@ func paConfigSection(ctx *bot.CommandContext, section string) []bot.Reply {
 				return []bot.Reply{{Text: tr.Tf("cmd.poracle_admin.config.empty_section", section)}}
 			}
 			block := fmt.Sprintf("[%s]\n%s", sec.name, text)
-			return bot.SplitTextReply(block)
+			return bot.SplitCodeBlockReply(block)
 		}
 	}
 
@@ -257,7 +253,7 @@ func paConfigFull(ctx *bot.CommandContext) []bot.Reply {
 		}
 	}
 
-	return bot.SplitTextReply(sb.String())
+	return bot.SplitCodeBlockReply(sb.String())
 }
 
 // sectionEntry holds a parsed config section for display.
