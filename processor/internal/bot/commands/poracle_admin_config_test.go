@@ -414,3 +414,25 @@ func TestShouldRedact_Heuristic(t *testing.T) {
 		}
 	}
 }
+
+// TestConfig_OutputInCodeBlock — section, full and search dumps are fenced so
+// snake_case keys aren't rendered as Markdown italics (seen on Telegram).
+func TestConfig_OutputInCodeBlock(t *testing.T) {
+	for name, args := range map[string][]string{
+		"section": {"discord"},
+		"full":    nil,
+		"search":  {"search", "prefix"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			replies := paConfig.run(adminCtx(t), args)
+			if len(replies) == 0 {
+				t.Fatal("expected replies")
+			}
+			for i, r := range replies {
+				if !strings.Contains(r.Text, "```\n") || !strings.HasSuffix(r.Text, "\n```") {
+					t.Errorf("reply %d not in a code block:\n%s", i, r.Text)
+				}
+			}
+		})
+	}
+}

@@ -533,6 +533,23 @@ func SplitTextReply(text string) []Reply {
 	return replies
 }
 
+// codeBlockChunkLen leaves headroom under the 2000-char limit for the
+// ``` fences plus a short caller-supplied header line on the first chunk.
+const codeBlockChunkLen = 1900
+
+// SplitCodeBlockReply is SplitTextReply with each chunk wrapped in a fenced
+// code block, so machine-shaped text (config keys like default_edit) isn't
+// interpreted as Markdown — e.g. underscore pairs turning into italics.
+// Each chunk is fenced separately so a split never leaves a block unclosed.
+func SplitCodeBlockReply(text string) []Reply {
+	messages := SplitMessage(escapeMarkdownCode(text), codeBlockChunkLen)
+	replies := make([]Reply, len(messages))
+	for i, msg := range messages {
+		replies[i] = Reply{Text: "```\n" + msg + "\n```"}
+	}
+	return replies
+}
+
 // maxInlineReplyChunks is the most Discord-sized (2000-char) messages a reply
 // may span before SplitOrAttachReply switches to a single file attachment.
 // Beyond this, splitting becomes a wall of messages; a file is cleaner. The
