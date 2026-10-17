@@ -116,6 +116,25 @@ func boolResult(result bool, options *raymond.Options) any {
 	return options.Inverse()
 }
 
+// capitalizeAll upper-cases the first letter or digit of each run of
+// non-space characters.
+func capitalizeAll(s string) string {
+	var sb strings.Builder
+	sb.Grow(len(s))
+	pending := true // still looking for the first letter/digit of this word
+	for _, r := range s {
+		switch {
+		case unicode.IsSpace(r):
+			pending = true
+		case pending && (unicode.IsLetter(r) || unicode.IsDigit(r) || r == '_'):
+			r = unicode.ToUpper(r)
+			pending = false
+		}
+		sb.WriteRune(r)
+	}
+	return sb.String()
+}
+
 func toFloat(v any) float64 {
 	if v == nil {
 		return 0
@@ -411,6 +430,44 @@ func registerStringHelpers() {
 		}
 		r, size := utf8.DecodeRuneInString(str)
 		return string(unicode.ToUpper(r)) + str[size:]
+	})
+
+	// capitalizeAll — upper-case the first letter of every word, leaving the
+	// rest untouched (PoracleJS / handlebars-helpers). A word is a run of
+	// non-space characters; its first letter or digit is capitalised, so
+	// "(old) church" → "(Old) Church". Unlike the JS original this is
+	// Unicode-aware: "église" → "Église".
+	raymond.RegisterHelper("capitalizeAll", func(s any) any {
+		return capitalizeAll(toString(s))
+	})
+
+	// ellipsis — keep the first n characters and append "…" when the string
+	// was longer (PoracleJS / handlebars-helpers). Counts characters, not
+	// bytes. Usage: {{ellipsis gymName 20}}
+	raymond.RegisterHelper("ellipsis", func(s, limit any) any {
+		r := []rune(toString(s))
+		n := max(int(toFloat(limit)), 0)
+		if len(r) <= n {
+			return string(r)
+		}
+		return string(r[:n]) + "…"
+	})
+
+	// startsWith — case-sensitive prefix test, argument order as in
+	// PoracleJS: {{#startsWith "Hello" str}}..{{else}}..{{/startsWith}}.
+	// Also usable as a subexpression: {{#if (startsWith "EX" gymName)}}.
+	raymond.RegisterHelper("startsWith", func(prefix, s any, options *raymond.Options) any {
+		return boolResult(strings.HasPrefix(toString(s), toString(prefix)), options)
+	})
+
+	// remove — delete every occurrence of a substring:
+	// {{remove gymName " (EX)"}}
+	raymond.RegisterHelper("remove", func(s, sub any) any {
+		str, subStr := toString(s), toString(sub)
+		if subStr == "" {
+			return str
+		}
+		return strings.ReplaceAll(str, subStr, "")
 	})
 
 	raymond.RegisterHelper("replace", func(s, old, new any) any {

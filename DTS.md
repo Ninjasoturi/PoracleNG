@@ -1219,7 +1219,7 @@ All comparison helpers work both as block helpers (`{{#eq a b}}X{{else}}Y{{/eq}}
 
 **Math:** `{{add a b}}`, `{{plus a b}}`, `{{subtract a b}}`, `{{minus a b}}`, `{{multiply a b}}`, `{{divide a b}}`, `{{round v}}`, `{{floor v}}`, `{{ceil v}}`, `{{toFixed v decimals}}`, `{{toInt v}}`
 
-**String:** `{{contains str sub}}`, `{{join arr sep}}`, `{{concat a b ...}}` (variadic), `{{lowercase str}}`, `{{uppercase str}}`, `{{capitalize str}}`, `{{replace str old new}}` (all occurrences), `{{replaceFirst str old new}}` (first occurrence only), `{{truncate str maxLen [suffix="..."]}}`
+**String:** `{{contains str sub}}`, `{{join arr sep}}`, `{{concat a b ...}}` (variadic), `{{lowercase str}}`, `{{uppercase str}}`, `{{capitalize str}}`, `{{capitalizeAll str}}` (every word), `{{ellipsis str n}}` (first n characters + `…` if longer), `{{remove str sub}}` (all occurrences), `{{#startsWith prefix str}}...{{else}}...{{/startsWith}}` (also as a subexpression), `{{replace str old new}}` (all occurrences), `{{replaceFirst str old new}}` (first occurrence only), `{{truncate str maxLen [suffix="..."]}}`
 
 **Array:** `{{length arr}}`, `{{first arr [n=1]}}`, `{{last arr [n=1]}}`
 
