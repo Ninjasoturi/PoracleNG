@@ -416,16 +416,24 @@ Time-remaining fields (`tthd`, `tthh`, `tthm`, `tths`) are in the Common Fields 
 | `genderNameEng` | string | English gender name |
 | `typeNameEng` | array | Array of English type name strings |
 | `baseStats` | object | `{baseAttack, baseDefense, baseStamina}` |
-| `evolutions` | array | Evolution chain entries |
+| `evolutions` | array | Evolution chain entries (see [Evolution entries](#evolution-entries)) |
 | `hasEvolutions` | bool | Has evolutions |
-| `megaEvolutions` | array | Mega evolution entries |
-| `hasMegaEvolutions` | bool | Has mega evolutions |
+| `megaEvolutions` | array | Mega evolution entries (see [Evolution entries](#evolution-entries)) |
+| `hasMegaEvolutions` | bool | A mega evolution exists anywhere in the chain (Electrike → Mega Manectric) |
 | `pokestopName` | string | Nearby pokestop name (if applicable) |
 | `costumeName` | string | Translated costume name (empty when no costume, i.e. `costume == 0` or the `costume_N` translation key is absent). |
 
 `distance`, `bearing`, `bearingEmoji`, `userDistanceTrack`, `userTrackDistance` are documented in Common Fields.
 
 **Note:** `fullName` already includes the costume, parenthesised, when the pokemon is wearing one — e.g. `"Pikachu (Holiday 2016)"`. `costumeName` is provided separately for templates that want to style or place the costume text independently of `fullName`.
+
+#### Evolution entries
+
+Each `{{#each evolutions}}` entry (pokemon and raid) has: `id`, `form`, `name`, `nameEng`, `fullName`, `fullNameEng`, `formName`, `formNameEng`, `formNormalised`, `formNormalisedEng`, `typeName`, `typeEmoji` (joined emoji string for the platform), `emoji` (array), `typeEmojiKeys`, `baseStats` and `evolutionRequirement`. The chain is walked recursively, so Bulbasaur lists both Ivysaur and Venusaur.
+
+Each `{{#each megaEvolutions}}` entry has: `evolution` (temp evolution id), `fullName`, `fullNameEng`, `typeName`, `typeEmoji`, `emoji`, `typeEmojiKeys` and `baseStats`.
+
+Inside the loop, use `../` for the alert's own fields, e.g. `{{calculateCp baseStats ../level ../atk ../def ../sta}}`.
 
 ### seenType values
 
@@ -540,6 +548,7 @@ Hatched raid with a boss pokemon.
 | `evolutionName` | string | Evolution name (for mega raids) |
 | `megaName` | string | Mega evolution name (fullName when evolved, name when not) |
 | `form` | int | Form ID (from webhook) |
+| `formId` | int | Alias for `form` |
 | `level` | int | Raid level |
 
 ### Gym
@@ -590,9 +599,9 @@ Hatched raid with a boss pokemon.
 | `shinyPossible` | bool | Can raid boss be shiny |
 | `shinyPossibleEmoji` | string | Shiny sparkle emoji (empty if not shiny possible) |
 | `hasEvolutions` | bool | Boss has evolutions |
-| `evolutions` | array | Evolution chain entries |
-| `hasMegaEvolutions` | bool | Boss has mega evolutions |
-| `megaEvolutions` | array | Mega evolution entries |
+| `evolutions` | array | Evolution chain entries (see [Evolution entries](#evolution-entries)) |
+| `hasMegaEvolutions` | bool | A mega evolution exists anywhere in the boss's chain |
+| `megaEvolutions` | array | Mega evolution entries (see [Evolution entries](#evolution-entries)) |
 
 ### Timing
 
@@ -1053,6 +1062,7 @@ Time-remaining fields are set with a fixed 1-hour TTH.
 |-------|------|-------------|
 | `nestName` | string | Nest/park name (from webhook) |
 | `pokemonId` | int | Pokemon ID (camelCase alias) |
+| `formId` | int | Form ID (alias for `form`) |
 | `pokemonCount` | int | Observed spawn count (from webhook) |
 | `pokemonSpawnAvg` | float | Average spawns per hour |
 | `name` | string | Translated pokemon name |
@@ -1219,7 +1229,7 @@ All comparison helpers work both as block helpers (`{{#eq a b}}X{{else}}Y{{/eq}}
 
 **Math:** `{{add a b}}`, `{{plus a b}}`, `{{subtract a b}}`, `{{minus a b}}`, `{{multiply a b}}`, `{{divide a b}}`, `{{round v}}`, `{{floor v}}`, `{{ceil v}}`, `{{toFixed v decimals}}`, `{{toInt v}}`
 
-**String:** `{{contains str sub}}`, `{{join arr sep}}`, `{{concat a b ...}}` (variadic), `{{lowercase str}}`, `{{uppercase str}}`, `{{capitalize str}}`, `{{replace str old new}}` (all occurrences), `{{replaceFirst str old new}}` (first occurrence only), `{{truncate str maxLen [suffix="..."]}}`
+**String:** `{{contains str sub}}`, `{{join arr sep}}`, `{{concat a b ...}}` (variadic), `{{lowercase str}}`, `{{uppercase str}}`, `{{capitalize str}}`, `{{capitalizeAll str}}` (every word), `{{ellipsis str n}}` (first n characters + `…` if longer), `{{remove str sub}}` (all occurrences), `{{#startsWith prefix str}}...{{else}}...{{/startsWith}}` (also as a subexpression), `{{replace str old new}}` (all occurrences), `{{replaceFirst str old new}}` (first occurrence only), `{{truncate str maxLen [suffix="..."]}}`
 
 **Array:** `{{length arr}}`, `{{first arr [n=1]}}`, `{{last arr [n=1]}}`
 
@@ -1239,7 +1249,9 @@ All comparison helpers work both as block helpers (`{{#eq a b}}X{{else}}Y{{/eq}}
 - `{{getEmoji key}}` — emoji lookup by key (platform-aware)
 - `{{translateAlt text}}` — translate key in alt language
 - `{{#getPowerUpCost startLevel endLevel}}...{{/getPowerUpCost}}` — power-up costs (`stardust`, `candy`, `xlCandy`)
-- `{{#map "mapName" value}}...{{/map}}` / `{{#map2 "mapName" value fallback}}...{{/map2}}` — custom map lookups (from `config/customMaps/`)
+- `{{map "mapName" value}}` / `{{map2 "mapName" value fallback}}` — custom map lookups (from `config/customMaps/`). Inline use prints the value; a missing key prints nothing, so `{{#if (map "mapName" value)}}` works as a test. Block use `{{#map "generation" pokemonId}}Gen {{genNumber}} {{genName}}{{else}}?{{/map}}` renders the body with an object value as context; `{{else}}` runs on a miss.
+
+  Files use the PoracleJS format — `{"name": "generation", "language": "de", "map": {"1": {...}}}` (`language` optional), or an array of those — or a flat `{"key": "value"}` named after the file (`arealist.de.json` is the German `arealist`). Values may be strings, numbers or objects. The map is looked up by `name`, not by file name. A language variant is tried before the base map, key by key. Maps are loaded at startup; editors can fetch them from `GET /api/dts/custommaps`.
 
 **Utility:** `{{escape value}}` — explicit HTML escaping
 

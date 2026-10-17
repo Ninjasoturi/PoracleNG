@@ -972,3 +972,37 @@ func TestLayeredView_MaxbattleStationNameEscaped(t *testing.T) {
 	require.True(t, ok)
 	assert.Equal(t, `The ''Cliff'' a?b`, name)
 }
+
+// TestLayeredView_EvolutionTypeEmoji verifies evolution and mega evolution
+// entries gain a per-platform typeEmoji string (as PoracleJS provided), without
+// mutating the shared perLang lists.
+func TestLayeredView_EvolutionTypeEmoji(t *testing.T) {
+	evolutions := []map[string]any{{"name": "Manectric", "typeEmojiKeys": []string{"type-electric"}}}
+	megas := []map[string]any{{"fullName": "Mega Manectric", "typeEmojiKeys": []string{"type-electric"}}}
+	lv := newTestView(t, func(o *testViewOpts) {
+		o.emoji = &EmojiLookup{custom: map[string]map[string]string{"discord": {"type-electric": "⚡"}}}
+		o.perLang = map[string]any{"evolutions": evolutions, "megaEvolutions": megas}
+	})
+
+	for _, field := range []string{"evolutions", "megaEvolutions"} {
+		v, ok := lv.GetField(field)
+		require.True(t, ok, field)
+		list, ok := v.([]map[string]any)
+		require.True(t, ok, field)
+		require.Len(t, list, 1)
+		assert.Equal(t, "⚡", list[0]["typeEmoji"], field)
+	}
+	_, mutated := evolutions[0]["typeEmoji"]
+	assert.False(t, mutated, "shared perLang evolution entry must not be mutated")
+}
+
+// TestLayeredView_FormIdAlias verifies {{formId}} resolves for pokemon alerts,
+// as PoracleJS set data.formId = data.form.
+func TestLayeredView_FormIdAlias(t *testing.T) {
+	lv := newTestView(t, func(o *testViewOpts) {
+		o.webhook = map[string]any{"form": 1487}
+	})
+	v, ok := lv.GetField("formId")
+	require.True(t, ok)
+	assert.Equal(t, 1487, v)
+}

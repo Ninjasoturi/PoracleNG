@@ -160,7 +160,7 @@ var monsterFields = []FieldDef{
 	{Name: "evolutions", Type: "array", Description: "Evolution entries", Category: "other"},
 	{Name: "megaEvolutions", Type: "array", Description: "Mega evolution entries", Category: "other"},
 	{Name: "hasEvolutions", Type: "bool", Description: "Has evolutions", Category: "other"},
-	{Name: "hasMegaEvolutions", Type: "bool", Description: "Has mega evolutions", Category: "other"},
+	{Name: "hasMegaEvolutions", Type: "bool", Description: "A mega evolution exists anywhere in the evolution chain (e.g. Electrike → Mega Manectric)", Category: "other"},
 	{Name: "pokestopName", Type: "string", Description: "Nearby pokestop name", Category: "other"},
 }
 
@@ -174,6 +174,7 @@ var raidFields = []FieldDef{
 	{Name: "nameEng", Type: "string", Description: "English pokemon name", Category: "identity"},
 	{Name: "fullNameEng", Type: "string", Description: "English name + form + costume", Category: "identity"},
 	{Name: "pokemonId", Type: "int", Description: "Pokemon ID", Category: "identity"},
+	{Name: "formId", Type: "int", Description: "Form ID", Category: "identity"},
 	{Name: "level", Type: "int", Description: "Raid level", Category: "identity", Preferred: true},
 	{Name: "levelName", Type: "string", Description: "Raid level name", Category: "identity", Preferred: true},
 	// Gym
@@ -213,7 +214,7 @@ var raidFields = []FieldDef{
 	{Name: "evolutions", Type: "array", Description: "Evolution entries", Category: "other"},
 	{Name: "megaEvolutions", Type: "array", Description: "Mega evolution entries", Category: "other"},
 	{Name: "hasEvolutions", Type: "bool", Description: "Has evolutions", Category: "other"},
-	{Name: "hasMegaEvolutions", Type: "bool", Description: "Has mega evolutions", Category: "other"},
+	{Name: "hasMegaEvolutions", Type: "bool", Description: "A mega evolution exists anywhere in the evolution chain (e.g. Electrike → Mega Manectric)", Category: "other"},
 	{Name: "weaknessList", Type: "array", Description: "Type weakness list", Category: "other"},
 	{Name: "weaknessEmoji", Type: "string", Description: "Flat string of all weakness multipliers + type emoji (e.g. \"2x💧⚡ 4x🪨 \").", Category: "other"},
 	{Name: "rsvps", Type: "array", Description: "RSVP timeslot entries", Category: "other"},
@@ -354,6 +355,7 @@ var nestFields = []FieldDef{
 	{Name: "nameEng", Type: "string", Description: "English pokemon name", Category: "identity"},
 	{Name: "nest_name", Type: "string", Description: "Nest name", Category: "location", Preferred: true},
 	{Name: "pokemonId", Type: "int", Description: "Pokemon ID", Category: "identity"},
+	{Name: "formId", Type: "int", Description: "Form ID", Category: "identity"},
 	{Name: "pokemonCount", Type: "int", Description: "Pokemon count", Category: "stats"},
 	{Name: "pokemonSpawnAvg", Type: "number", Description: "Avg spawns per hour", Category: "stats"},
 	{Name: "pokemonRatio", Type: "number", Description: "Pokemon spawn ratio", Category: "stats"},
@@ -473,15 +475,25 @@ var evolutionEntryFields = []FieldDef{
 	{Name: "fullName", Type: "string", Description: "Translated name + form"},
 	{Name: "formName", Type: "string", Description: "Translated form name"},
 	{Name: "formNormalised", Type: "string", Description: "Form name (empty for Normal)"},
+	{Name: "nameEng", Type: "string", Description: "English pokemon name"},
+	{Name: "fullNameEng", Type: "string", Description: "English name + form"},
+	{Name: "formNameEng", Type: "string", Description: "English form name"},
+	{Name: "formNormalisedEng", Type: "string", Description: "English form name (empty for Normal)"},
 	{Name: "typeName", Type: "string", Description: "Comma-joined translated type names"},
+	{Name: "typeEmoji", Type: "string", Description: "Joined type emoji string for the platform"},
+	{Name: "emoji", Type: "array", Description: "Type emoji strings for the platform"},
 	{Name: "typeEmojiKeys", Type: "array", Description: "Array of type emoji keys"},
 	{Name: "baseStats", Type: "object", Description: "{baseAttack, baseDefense, baseStamina}"},
+	{Name: "evolutionRequirement", Type: "string", Description: "Translated evolution requirement (e.g. \"50 candies\")"},
 }
 
 var megaEvolutionEntryFields = []FieldDef{
 	{Name: "evolution", Type: "int", Description: "Temp evolution ID"},
 	{Name: "fullName", Type: "string", Description: "Translated mega name"},
+	{Name: "fullNameEng", Type: "string", Description: "English mega name"},
 	{Name: "typeName", Type: "string", Description: "Comma-joined translated type names"},
+	{Name: "typeEmoji", Type: "string", Description: "Joined type emoji string for the platform"},
+	{Name: "emoji", Type: "array", Description: "Type emoji strings for the platform"},
 	{Name: "typeEmojiKeys", Type: "array", Description: "Array of type emoji keys"},
 	{Name: "baseStats", Type: "object", Description: "{baseAttack, baseDefense, baseStamina}"},
 }
@@ -638,6 +650,15 @@ var commonSnippets = []Snippet{
 	{Label: "contains", Insert: "{{#contains fieldName 'text'}}...{{/contains}}", Description: "Check if string contains text", Category: "string"},
 	{Label: "replace", Insert: "{{replace fieldName 'old' 'new'}}", Description: "Replace all occurrences", Category: "string"},
 	{Label: "concat", Insert: "{{concat a b c}}", Description: "Concatenate strings", Category: "string"},
+	{Label: "capitalizeAll", Insert: "{{capitalizeAll fieldName}}", Description: "Capitalise the first letter of every word", Category: "string"},
+	{Label: "ellipsis", Insert: "{{ellipsis fieldName 20}}", Description: "First N characters, plus … when longer", Category: "string"},
+	{Label: "remove", Insert: "{{remove fieldName 'text'}}", Description: "Remove all occurrences of text", Category: "string"},
+	{Label: "startsWith", Insert: "{{#startsWith 'prefix' fieldName}}...{{else}}...{{/startsWith}}", Description: "Case-sensitive prefix test (also usable as a subexpression)", Category: "string"},
+	// Custom maps (config/customMaps/)
+	{Label: "map", Insert: "{{map 'mapName' fieldName}}", Description: "Custom map lookup; prints nothing when the key is missing", Category: "customMap"},
+	{Label: "map (object value)", Insert: "{{#map 'mapName' fieldName}}{{property}}{{else}}...{{/map}}", Description: "Custom map lookup with an object value as the block context; else runs when the key is missing", Category: "customMap"},
+	{Label: "map2 (fallback key)", Insert: "{{map2 'mapName' (concat pokemonId '_' formId) pokemonId}}", Description: "Custom map lookup trying a second key when the first is missing", Category: "customMap"},
+	{Label: "if map has key", Insert: "{{#if (map 'mapName' fieldName)}}...{{/if}}", Description: "Test whether a custom map has the key", Category: "customMap"},
 	// Iteration
 	{Label: "each", Insert: "{{#each arrayField}}{{this}}{{/each}}", Description: "Iterate over an array", Category: "iteration"},
 	{Label: "each with index", Insert: "{{#each arrayField}}{{@index}}: {{this}}{{/each}}", Description: "Iterate with index", Category: "iteration"},

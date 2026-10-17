@@ -114,6 +114,7 @@ var commonAliases = []aliasPair{
 // fields depending on webhook type ("gym_name" for raids vs "name" for gym changes).
 var typeAliases = map[string][]aliasPair{
 	"monster": {
+		{"formId", "form"},
 		{"formname", "formName"},
 		{"ivcolor", "ivColor"},
 		{"pokestopName", "pokestop_name"},
@@ -130,6 +131,7 @@ var typeAliases = map[string][]aliasPair{
 		{"pokemonId", "pokemon_id"},
 	},
 	"monsterNoIv": {
+		{"formId", "form"},
 		{"formname", "formName"},
 		{"pokestopId", "pokestop_id"},
 		{"spawnpointId", "spawnpoint_id"},
@@ -137,6 +139,7 @@ var typeAliases = map[string][]aliasPair{
 		{"pokemonId", "pokemon_id"},
 	},
 	"raid": {
+		{"formId", "form"},
 		{"gymName", "gym_name"},
 		{"gymUrl", "gym_url"},
 		{"gymColor", "gym_color"},
@@ -169,6 +172,7 @@ var typeAliases = map[string][]aliasPair{
 	// are a subset of raid's (no moves/forms because eggs aren't hatched),
 	// and the extras are harmless when fields aren't populated.
 	"rsvpChanges": {
+		{"formId", "form"},
 		{"gymName", "gym_name"},
 		{"gymUrl", "gym_url"},
 		{"gymColor", "gym_color"},
@@ -252,6 +256,7 @@ var typeAliases = map[string][]aliasPair{
 		{"lureType", "lureTypeName"},
 	},
 	"nest": {
+		{"formId", "form"},
 		{"nestName", "nest_name"},
 		{"nestId", "nest_id"},
 	},
