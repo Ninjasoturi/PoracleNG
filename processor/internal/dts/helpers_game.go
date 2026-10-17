@@ -1,6 +1,7 @@
 package dts
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"math"
@@ -336,12 +337,46 @@ func registerMiscGameHelpers(gd *gamedata.GameData, bundle *i18n.Bundle, emoji *
 	customMaps := loadCustomMaps(configDir)
 
 	raymond.RegisterHelper("map", func(mapName, value any, options *raymond.Options) any {
-		return lookupCustomMap(customMaps, toString(mapName), toString(value), "", getLang(options))
+		v, ok := lookupCustomMap(customMaps, toString(mapName), toString(value), "", getLang(options))
+		return customMapResult(v, ok, options)
 	})
 
 	raymond.RegisterHelper("map2", func(mapName, value, value2 any, options *raymond.Options) any {
-		return lookupCustomMap(customMaps, toString(mapName), toString(value), toString(value2), getLang(options))
+		v, ok := lookupCustomMap(customMaps, toString(mapName), toString(value), toString(value2), getLang(options))
+		return customMapResult(v, ok, options)
 	})
+}
+
+// customMapResult shapes a custom map lookup for the three ways {{map}} and
+// {{map2}} are used, matching PoracleJS:
+//   - block ({{#map 'name' key}}...{{/map}}): renders the body with the
+//     looked-up value as context, so object values expose their fields
+//     ({{genName}}). A missing key renders the {{else}} branch (if any).
+//   - subexpression ({{#if (map 'name' key)}}): returns the raw value, so a
+//     missing key is falsy and an object value is truthy.
+//   - inline ({{map 'name' key}}): returns the value; missing keys and object
+//     values render as empty.
+func customMapResult(v any, found bool, options *raymond.Options) any {
+	if options.IsSubExpression() {
+		if !found {
+			return nil
+		}
+		return v
+	}
+	if options.IsBlock() {
+		if !found {
+			return options.Inverse()
+		}
+		return options.FnWith(v)
+	}
+	if !found {
+		return ""
+	}
+	switch v.(type) {
+	case map[string]any, []any:
+		return ""
+	}
+	return v
 }
 
 // ---------------------------------------------------------------------------
@@ -383,11 +418,26 @@ func calculatePowerUpCost(gd *gamedata.GameData, startLevel, endLevel float64) (
 
 type customMapStore struct {
 	mu   sync.RWMutex
-	maps map[string]map[string]string
+	maps map[string]map[string]any // keyed by map name, or "name.language"
 }
 
+// customMapDef is one map definition in the PoracleJS customMaps format.
+type customMapDef struct {
+	Name     string         `json:"name"`
+	Language string         `json:"language"`
+	Map      map[string]any `json:"map"`
+}
+
+// loadCustomMaps reads config/customMaps/*.json. Each file may hold:
+//  1. a PoracleJS definition: {"name": "arealist", "language": "de", "map": {...}}
+//  2. an array of PoracleJS definitions (several maps in one file)
+//  3. a flat map {"key": "value"}, named after the file ("arealist.de.json"
+//     is the German variant of "arealist")
+//
+// Map values may be strings, numbers or objects; object values are used with
+// block syntax: {{#map 'generation' pokemonId}}{{genName}}{{/map}}.
 func loadCustomMaps(configDir string) *customMapStore {
-	store := &customMapStore{maps: make(map[string]map[string]string)}
+	store := &customMapStore{maps: make(map[string]map[string]any)}
 	if configDir == "" {
 		return store
 	}
@@ -402,71 +452,103 @@ func loadCustomMaps(configDir string) *customMapStore {
 		return store
 	}
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
+		if e.IsDir() || !strings.HasSuffix(strings.ToLower(e.Name()), ".json") {
 			continue
 		}
-		name := strings.TrimSuffix(e.Name(), ".json")
 		data, err := os.ReadFile(filepath.Join(mapsDir, e.Name()))
 		if err != nil {
 			log.Warnf("dts: read custom map %s: %v", e.Name(), err)
 			continue
 		}
-
-		// Support both formats:
-		// 1. PoracleJS format: {"name": "arealist", "map": {"key": "value"}}
-		// 2. Flat format: {"key": "value"}
-		var wrapper struct {
-			Name string            `json:"name"`
-			Map  map[string]string `json:"map"`
-		}
-		if err := json.Unmarshal(data, &wrapper); err == nil && wrapper.Map != nil {
-			store.maps[name] = wrapper.Map
-			log.Debugf("dts: loaded custom map %s (%d entries, PoracleJS format)", name, len(wrapper.Map))
-			continue
-		}
-
-		var m map[string]string
-		if err := json.Unmarshal(data, &m); err != nil {
+		defs, err := parseCustomMapFile(data, strings.TrimSuffix(e.Name(), filepath.Ext(e.Name())))
+		if err != nil {
 			log.Warnf("dts: parse custom map %s: %v", e.Name(), err)
 			continue
 		}
-		store.maps[name] = m
-		log.Debugf("dts: loaded custom map %s (%d entries)", name, len(m))
+		for _, d := range defs {
+			key := d.Name
+			if d.Language != "" {
+				key += "." + d.Language
+			}
+			store.maps[key] = d.Map
+			log.Debugf("dts: loaded custom map %s from %s (%d entries)", key, e.Name(), len(d.Map))
+		}
 	}
 	return store
 }
 
-func lookupCustomMap(store *customMapStore, mapName, value, fallbackValue, lang string) string {
+// parseCustomMapFile decodes one customMaps file into its map definitions.
+// fileName (without extension) names a flat-format map.
+func parseCustomMapFile(data []byte, fileName string) ([]customMapDef, error) {
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) > 0 && trimmed[0] == '[' {
+		var defs []customMapDef
+		if err := json.Unmarshal(trimmed, &defs); err != nil {
+			return nil, err
+		}
+		out := defs[:0]
+		for _, d := range defs {
+			if d.Name == "" || d.Map == nil {
+				log.Warnf("dts: custom map file %s.json: skipping entry without name/map", fileName)
+				continue
+			}
+			out = append(out, d)
+		}
+		return out, nil
+	}
+
+	var raw map[string]json.RawMessage
+	if err := json.Unmarshal(trimmed, &raw); err != nil {
+		return nil, err
+	}
+	if _, ok := raw["map"]; ok {
+		var d customMapDef
+		if err := json.Unmarshal(trimmed, &d); err != nil {
+			return nil, err
+		}
+		if d.Map != nil {
+			if d.Name == "" {
+				d.Name = fileName
+			}
+			return []customMapDef{d}, nil
+		}
+	}
+
+	var flat map[string]any
+	if err := json.Unmarshal(trimmed, &flat); err != nil {
+		return nil, err
+	}
+	d := customMapDef{Name: fileName}
+	if base, lang, ok := strings.Cut(fileName, "."); ok {
+		d.Name, d.Language = base, lang
+	}
+	d.Map = flat
+	return []customMapDef{d}, nil
+}
+
+// lookupCustomMap returns the value for value (or fallbackValue) in the named
+// map, preferring the user's language variant. found is false when neither key
+// exists, so templates can treat a miss as empty/falsy like PoracleJS did.
+func lookupCustomMap(store *customMapStore, mapName, value, fallbackValue, lang string) (any, bool) {
 	if store == nil {
-		return value
+		return nil, false
 	}
 	store.mu.RLock()
 	defer store.mu.RUnlock()
 
-	// Try language-specific map first
-	langKey := mapName + "." + lang
-	if m, ok := store.maps[langKey]; ok {
+	for _, name := range []string{mapName + "." + lang, mapName} {
+		m, ok := store.maps[name]
+		if !ok {
+			continue
+		}
 		if v, ok := m[value]; ok {
-			return v
+			return v, true
 		}
 		if fallbackValue != "" {
 			if v, ok := m[fallbackValue]; ok {
-				return v
+				return v, true
 			}
 		}
 	}
-
-	// Try base map
-	if m, ok := store.maps[mapName]; ok {
-		if v, ok := m[value]; ok {
-			return v
-		}
-		if fallbackValue != "" {
-			if v, ok := m[fallbackValue]; ok {
-				return v
-			}
-		}
-	}
-
-	return value
+	return nil, false
 }

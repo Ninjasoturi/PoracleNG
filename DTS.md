@@ -1239,7 +1239,9 @@ All comparison helpers work both as block helpers (`{{#eq a b}}X{{else}}Y{{/eq}}
 - `{{getEmoji key}}` — emoji lookup by key (platform-aware)
 - `{{translateAlt text}}` — translate key in alt language
 - `{{#getPowerUpCost startLevel endLevel}}...{{/getPowerUpCost}}` — power-up costs (`stardust`, `candy`, `xlCandy`)
-- `{{#map "mapName" value}}...{{/map}}` / `{{#map2 "mapName" value fallback}}...{{/map2}}` — custom map lookups (from `config/customMaps/`)
+- `{{map "mapName" value}}` / `{{map2 "mapName" value fallback}}` — custom map lookups (from `config/customMaps/`). Inline use prints the value; a missing key prints nothing, so `{{#if (map "mapName" value)}}` works as a test. Block use `{{#map "generation" pokemonId}}Gen {{genNumber}} {{genName}}{{else}}?{{/map}}` renders the body with an object value as context; `{{else}}` runs on a miss.
+
+  Files use the PoracleJS format — `{"name": "generation", "language": "de", "map": {"1": {...}}}` (`language` optional), or an array of those — or a flat `{"key": "value"}` named after the file (`arealist.de.json` is the German `arealist`). Values may be strings, numbers or objects. The map is looked up by `name`, not by file name. A language variant is tried before the base map, key by key.
 
 **Utility:** `{{escape value}}` — explicit HTML escaping
 

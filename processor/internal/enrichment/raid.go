@@ -305,6 +305,9 @@ func (e *Enricher) RaidTranslate(base map[string]any, raid *webhook.RaidWebhook,
 		evolutions, megaEvolutions := e.buildEvolutions(gd, tr, raid.PokemonID, raid.Form)
 		m["evolutions"] = evolutions
 		m["megaEvolutions"] = megaEvolutions
+		// Chain-wide, as PoracleJS did: Electrike → Mega Manectric counts. Outranks
+		// the base-layer flag, which only reflects the species itself.
+		m["hasMegaEvolutions"] = len(megaEvolutions) > 0
 		m["prevEvolutions"] = e.buildPrevEvolutions(gd, tr, raid.PokemonID)
 	}
 

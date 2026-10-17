@@ -154,6 +154,12 @@ func toString(v any) string {
 	if v == nil {
 		return ""
 	}
+	// raymond hands a missing field to a helper as []any(nil); treat it (and
+	// any empty list) as empty rather than printing "[]", matching how
+	// PoracleJS rendered undefined in helpers like {{concat}}.
+	if a, ok := v.([]any); ok && len(a) == 0 {
+		return ""
+	}
 	return fmt.Sprintf("%v", v)
 }
 
