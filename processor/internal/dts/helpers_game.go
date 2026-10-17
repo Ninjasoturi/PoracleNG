@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"math"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 
 	raymond "github.com/mailgun/raymond/v2"
 	log "github.com/sirupsen/logrus"
@@ -335,6 +337,7 @@ func registerMiscGameHelpers(gd *gamedata.GameData, bundle *i18n.Bundle, emoji *
 	})
 
 	customMaps := loadCustomMaps(configDir)
+	activeCustomMaps.Store(customMaps)
 
 	raymond.RegisterHelper("map", func(mapName, value any, options *raymond.Options) any {
 		v, ok := lookupCustomMap(customMaps, toString(mapName), toString(value), "", getLang(options))
@@ -416,9 +419,33 @@ func calculatePowerUpCost(gd *gamedata.GameData, startLevel, endLevel float64) (
 // Custom maps
 // ---------------------------------------------------------------------------
 
+// activeCustomMaps is the store the map/map2 helpers were registered with,
+// exposed through CustomMaps so the DTS editor can preview lookups.
+var activeCustomMaps atomic.Pointer[customMapStore]
+
+// CustomMaps returns the loaded custom maps keyed by lookup key — the map
+// name, or "name.language" for a language variant. Callers must treat the
+// inner maps as read-only. Empty (never nil) before helpers are registered.
+func CustomMaps() map[string]map[string]any {
+	return activeCustomMaps.Load().snapshot()
+}
+
 type customMapStore struct {
 	mu   sync.RWMutex
 	maps map[string]map[string]any // keyed by map name, or "name.language"
+}
+
+// snapshot returns a copy of the outer map. The inner maps are shared; they
+// are never modified after loading.
+func (s *customMapStore) snapshot() map[string]map[string]any {
+	if s == nil {
+		return map[string]map[string]any{}
+	}
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	out := make(map[string]map[string]any, len(s.maps))
+	maps.Copy(out, s.maps)
+	return out
 }
 
 // customMapDef is one map definition in the PoracleJS customMaps format.

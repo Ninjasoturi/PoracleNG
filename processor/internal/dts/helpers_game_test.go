@@ -756,3 +756,21 @@ func TestCustomMapHelperModes(t *testing.T) {
 		})
 	}
 }
+
+func TestCustomMapStoreSnapshot(t *testing.T) {
+	store := writeCustomMaps(t, map[string]string{
+		"weather.json": `[{"name": "weatherBoost", "map": {"Windy": "Flying"}}, {"name": "weatherBoost", "language": "de", "map": {"Windy": "Flug"}}]`,
+	})
+	snap := store.snapshot()
+	if snap["weatherBoost"]["Windy"] != "Flying" || snap["weatherBoost.de"]["Windy"] != "Flug" {
+		t.Errorf("snapshot keyed by lookup key: got %v", snap)
+	}
+	// Replacing a map in the snapshot must not affect the store.
+	snap["weatherBoost"] = nil
+	if v, ok := lookupCustomMap(store, "weatherBoost", "Windy", "", "en"); !ok || v != "Flying" {
+		t.Errorf("store changed through snapshot: got (%v, %v)", v, ok)
+	}
+	if got := (*customMapStore)(nil).snapshot(); got == nil || len(got) != 0 {
+		t.Errorf("nil store snapshot: got %v, want empty map", got)
+	}
+}

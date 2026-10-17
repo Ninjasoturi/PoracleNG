@@ -506,6 +506,7 @@ All API endpoints are accessed via the processor (port 3030). The processor hand
 | GET | `/api/dts/fields` | List all DTS type names |
 | GET | `/api/dts/fields/{type}` | Template fields, block scopes, and snippets for a type |
 | GET | `/api/dts/partials` | Handlebars partials for client-side rendering |
+| GET | `/api/dts/custommaps` | Custom maps (`config/customMaps/`) keyed by `name` / `name.language`, for client-side `{{map}}` preview |
 | POST | `/api/dts/sendtest` | Render and deliver a test message |
 | GET | `/api/dts/testdata` | Test webhook scenarios from testdata.json |
 | GET/POST | `/api/dts/reload` | Reload DTS templates and partials from disk |
@@ -548,7 +549,7 @@ All API endpoints are accessed via the processor (port 3030). The processor hand
 | DELETE | `/api/profiles/{id}/byProfileNo/{profile_no}` | Delete profile |
 | GET | `/api/snapshots/{messageID}?target={id}` | Inspect a delivered-message snapshot (admin diagnostics; 503 if `[snapshots] enabled = false`) |
 | GET | `/api/dts/actions` | List registered button actions + their scopes/params (drives the config editor's button UI) |
-| GET | `/health` | Health check; returns `{status, version, capabilities}` where `capabilities` is a static feature map (`buttons`, `snapshots`, `autocreate`, `tomlDts`, `buttonResponseObject`, `derivedDtsTypes`) so clients can do explicit feature detection without probing endpoints |
+| GET | `/health` | Health check; returns `{status, version, capabilities}` where `capabilities` is a static feature map (`buttons`, `snapshots`, `autocreate`, `tomlDts`, `buttonResponseObject`, `derivedDtsTypes`, `costume`, `customMaps`) so clients can do explicit feature detection without probing endpoints |
 | GET | `/metrics` | Prometheus metrics |
 | GET | `/openapi.json` | OpenAPI 3.1 spec (whole `/api` + `/api/v2` surface; public) |
 | GET | `/docs` | Interactive API docs (public) |

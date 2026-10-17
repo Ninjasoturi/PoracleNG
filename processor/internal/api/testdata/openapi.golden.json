@@ -796,6 +796,26 @@
         ],
         "type": "object"
       },
+      "DtsCustomMapsOutputBody": {
+        "additionalProperties": false,
+        "properties": {
+          "maps": {
+            "additionalProperties": {
+              "additionalProperties": {},
+              "type": "object"
+            },
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "maps"
+        ],
+        "type": "object"
+      },
       "DtsEnrichResponse": {
         "additionalProperties": false,
         "properties": {
@@ -13759,6 +13779,43 @@
           }
         ],
         "summary": "List registered button actions + their scopes/params",
+        "tags": [
+          "dts"
+        ]
+      }
+    },
+    "/dts/custommaps": {
+      "get": {
+        "description": "Returns {status, maps}: the custom maps loaded from config/customMaps/, keyed by lookup key — the map name, or `name.language` for a language variant. The {{map}} / {{map2}} helpers try `name.<user language>` then `name`, key by key; a key missing from both renders empty (falsy in subexpressions). Values may be strings, numbers or objects (objects are used with block syntax). Maps are loaded at startup.",
+        "operationId": "get-dts-custommaps",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DtsCustomMapsOutputBody"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModel"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "poracleSecret": []
+          }
+        ],
+        "summary": "Custom maps for client-side rendering",
         "tags": [
           "dts"
         ]
