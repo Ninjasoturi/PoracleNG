@@ -240,7 +240,7 @@ func (ts *TelegramSender) Send(ctx context.Context, job *Job) (*SentMessage, err
 				disableNotification = *msg.DisableNotification
 			}
 			includeCaption := msg.Caption != nil && *msg.Caption
-			msgID, err = ts.sendPhoto(ctx, chatID, topicID, msg.Photo, msg.Content, includeCaption, parseMode, msg.WebpagePreview, disableNotification, job.ReplyToID, job.LogReference)
+			msgID, err = ts.sendPhoto(ctx, chatID, topicID, msg.Photo, msg.Content, includeCaption, parseMode, disableNotification, job.ReplyToID, job.LogReference)
 
 		case "text":
 			if msg.Content == "" {
@@ -512,7 +512,7 @@ func (ts *TelegramSender) sendSticker(ctx context.Context, chatID string, topicI
 }
 
 // sendPhoto sends a photo by URL.
-func (ts *TelegramSender) sendPhoto(ctx context.Context, chatID string, topicID int, photoURL, content string, includeCaption bool, parseMode string, webpagePreview bool, disableNotification bool, replyToID, logRef string) (int, error) {
+func (ts *TelegramSender) sendPhoto(ctx context.Context, chatID string, topicID int, photoURL, content string, includeCaption bool, parseMode string, disableNotification bool, replyToID, logRef string) (int, error) {
 	body := map[string]any{
 		"chat_id":              chatID,
 		"photo":                photoURL,
@@ -521,7 +521,6 @@ func (ts *TelegramSender) sendPhoto(ctx context.Context, chatID string, topicID 
 	if includeCaption {
 		body["caption"] = content
 		body["parse_mode"] = parseMode
-		body["disable_web_page_preview"] = !webpagePreview
 	}
 	applyTopic(body, topicID)
 	applyReplyTo(body, replyToID)
